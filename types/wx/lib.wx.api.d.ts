@@ -4066,6 +4066,10 @@ innerAudioContext.onError((res) => {
         width: string
         errMsg: string
     }
+    interface SocketTaskOnCloseCallbackResult {
+        code: number;
+        reason: string;
+    }
     interface SocketTaskOnErrorCallbackResult {
         /** 错误信息 */
         errMsg: string
@@ -8414,7 +8418,17 @@ Component({
             component: Component.TrivialInstance | Page.TrivialInstance,
         ): SelectorQuery
     }
+
+    enum SocketStatus {
+        CONNECTING,
+        OPEN,
+        CLOSING,
+        CLOSED
+    }
+
     interface SocketTask {
+        /**  WebSocket 连接状态 */ 
+        readyState: SocketStatus;
         /** [SocketTask.close(Object object)](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.close.html)
          *
          * 关闭 WebSocket 连接 */
@@ -14585,7 +14599,7 @@ wx.writeBLECharacteristicValue({
     /** 接口调用成功的回调函数 */
     type ShowToastSuccessCallback = (res: GeneralCallbackResult) => void
     /** WebSocket 连接关闭事件的回调函数 */
-    type SocketTaskOnCloseCallback = (res: GeneralCallbackResult) => void
+    type SocketTaskOnCloseCallback = (res: SocketTaskOnCloseCallbackResult) => void
     /** WebSocket 错误事件的回调函数 */
     type SocketTaskOnErrorCallback = (
         result: SocketTaskOnErrorCallbackResult,
